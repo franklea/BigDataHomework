@@ -15,7 +15,7 @@ public class Test {
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String fileName = "sampledata.txt";
+		String fileName = "data.txt";
 		String poiFileName = "POIYP.xls";
 		
 		//Type data stored in array resPoi;
@@ -26,7 +26,7 @@ public class Test {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-//		parser.printRes(resPoi);
+		parser.printRes(resPoi);
 		
 		//poi data stored in list res;
 		ArrayList<Data> dataList = new ArrayList<Data>();
@@ -34,10 +34,11 @@ public class Test {
 		dataList = data.readFromFile(fileName);
 
 // test buildTree		
-//		SimpleKdTree kdTree = new SimpleKdTree();
-//		int first_dim = kdTree.firstDim(dataList);
-//		KdNode root = new KdNode();
-//		root = kdTree.buildTree(dataList);
+		SimpleKdTree kdTree = new SimpleKdTree();
+		int first_dim = kdTree.firstDim(dataList);
+		KdNode root = new KdNode();
+		root = kdTree.buildTree(dataList);
+		System.out.println(root.data.x+" "+root.data.y);
 
 		
 // test NNQ

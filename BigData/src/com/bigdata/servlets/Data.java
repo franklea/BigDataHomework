@@ -41,6 +41,7 @@ public class Data {
             String item = null;
             
             while ((item = reader.readLine()) != null) {
+            	//System.out.println(item);
             	String[] dataString = item.split(",");
             	String item_name = dataString[1];
             	String item_poi = dataString[9];

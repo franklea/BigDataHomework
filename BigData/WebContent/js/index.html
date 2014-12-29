@@ -9,7 +9,7 @@
       <script type="text/javascript">
          var map = null;
 
-         var LA = new VELatLong(31.2434191659,121.4813312057);
+         var LA = new VELatLong(31.030562,121.428796);
 
          var pinPoint = null;
          var pinPixel = null;
@@ -19,66 +19,187 @@
             map = new VEMap('myMap');
             map.LoadMap(LA, 11, VEMapStyle.Road, false, VEMapMode.Mode2D, true, 1);
 
-            AddPin();
+            AddPin(31.030562,121.428796);
          }
 
-         function getInfo()
-         {
-            var info;
-
-            if (map.IsBirdseyeAvailable())
-            {
-                var be = map.GetBirdseyeScene();
-
-                info  = "ID: "          + be.GetID() + "\n";
-                info += "orientation: " + be.GetOrientation()+ "\n";
-                info += "height: "      + be.GetHeight() + "\n";
-                info += "width: "       + be.GetWidth() + "\n";
-
-                var pixel = be.LatLongToPixel(map.GetCenter(), map.GetZoomLevel());
-
-                info += "LatLongToPixel: " + pixel.x + ", " + pixel.y + "\n";
-
-                // Check to see if the current birdseye view contains the pushpin pixel point.
-                info += "contains pixel " + pinPixel.x + ", " + pinPixel.y + ": " + 
-                        be.ContainsPixel(pinPixel.x, pinPixel.y, map.GetZoomLevel()) + "\n";
-                
-                // Check to see if the current view contains the pushpin LatLong.
-                info += "contains latlong " + pinPoint + ": " + be.ContainsLatLong(pinPoint) + "\n";
-                
-                // This method may return null, depending on the selected view and map style.
-                info += "latlong: " + map.PixelToLatLong(pixel);
-
-                alert(info);
-            }
-            else
-            {
-                var center = map.GetCenter();
-
-                info  = "Zoom level:\t" + map.GetZoomLevel() + "\n";
-                info += "Latitude:\t"   + center.Latitude    + "\n";
-                info += "Longitude:\t"  + center.Longitude;
-
-                alert(info);
-            }
-         }
-         
-         function AddPin()
+         function AddPin(x,y)
          {
             // Add a new pushpin to the center of the map.
-            pinPoint = map.GetCenter();
+            pinPoint = new VELatLong(x,y);
             pinPixel = map.LatLongToPixel(pinPoint);
             map.AddPushpin(pinPoint);
+         }
+         
+         function DeleteAllPin(){
+
+        	 
          }
 		 
 		 
       </script>
    </head>
    <body onload="GetMap();">
-      <div id='myMap' style="position:relative; width:1200px; height:800px;"></div>
-      <input id="btnGetInfo" type="button" value="Get Scene Information" name="getinfo" onclick="getInfo();">
-	  
-	   
+      <div id='myMap' style="position:relative; width:800px; height:600px;"></div>
+     
+<script type="text/javascript">
+ function getPoi(type,Lclass) {
+     　 var url ="/BigData/DoQuery?type="+type+"&value="+Lclass+"&act=xxx&parm=xxx"; 
+     　 if (window.XMLHttpRequest) { 
+             　　req = new XMLHttpRequest(); 
+     　　}else if (window.ActiveXObject) { 
+             　　req = new ActiveXObject("Microsoft.XMLHTTP"); 
+     　　} 
+     　　if(req){ 
+             　　req.open("GET",url,true); 
+           if (type == 'L'){
+        	   clearSelect(document.getElementById("Mclass"));
+        	   clearSelect(document.getElementById("Sclass"));
+        	   req.onreadystatechange= getMclass; 
+           }else if(type == 'M'){
+        	   clearSelect(document.getElementById("Sclass"));
+        	   req.onreadystatechange= getSclass; 
+           }else if(type == 'S'){
+        	   
+           }
+             　　
+             　　req.send(null); 
+     　　} 
+ } 
+ 
+ function getMclass(){
+     　　if (req.readyState == 4) { 
+             　　if (req.status == 200) {
+                     　　var mClass =req.responseXML.getElementsByTagName("tclass");
+                // alert("XXX"+mClass.length);
+                     　　var str=new Array();
+                     　　for(var i=0;i<mClass.length;i++){
+                             　　str[i]=mClass[i].firstChild.data;
+                     　　}
+                     　　buildSelect(str,document.getElementById("Mclass"));
+             　　}
+     　　}
+ }
+ 
+ function getSclass(){
+   　　if (req.readyState == 4) { 
+           　　if (req.status == 200) {
+                   　　var mClass =req.responseXML.getElementsByTagName("tclass");
+              // alert("XXX"+mClass.length);
+                   　　var str=new Array();
+                   　　for(var i=0;i<mClass.length;i++){
+                           　　str[i]=mClass[i].firstChild.data;
+                   　　}
+                   　　buildSelect(str,document.getElementById("Sclass"));
+           　　}
+   　　}
+}
+ 
+ 
+ function buildSelect(str,sel) {
+     　　sel.options.length=1;
+      sel.add= new Option("请选择","请选择");
+     　　for(var i=0;i<str.length;i++) {
+             　　sel.options[sel.options.length]=new Option(str[i],str[i]);
+     　　}
+ }
+ 
+ function clearSelect(sel){
+	 for(var i=sel.options.length-1; i>=1; i--){
+		 sel.options.remove(i);
+	 }
+	 
+ }
+ 
+ 
+ function doQuery(){
+
+	 DeleteAllPin()
+	 alert("doquery!");
+	 var method=document.getElementById("method");
+	 var index=method.selectedIndex;
+	 var action=method.options[index].value;
+	 //alert(action);
+	 
+	 var parm=document.getElementById("dis").value;
+	 //alert(parm);
+	 
+	 var url ="/BigData/DoQuery?type=xxx&value=xxx&act="+action+"&parm="+parm; 
+   　 if (window.XMLHttpRequest) { 
+           　　req = new XMLHttpRequest(); 
+   　　}else if (window.ActiveXObject) { 
+           　　req = new ActiveXObject("Microsoft.XMLHTTP"); 
+   　　} 
+   　　if(req){ 
+           　　req.open("GET",url,true); 
+      	  req.onreadystatechange= getResult; 
+           　　req.send(null); 
+   　　} 
+	 
+ }
+ 
+ //TODO:
+ function getResult(){
+   　　if (req.readyState == 4) { 
+           　　if (req.status == 200) {
+                   　　var mClass =req.responseXML.getElementsByTagName("locate");
+                   　　var str=new Array();
+                   　　for(var i=0;i<mClass.length;i++){
+                           　　str[i]=mClass[i].firstChild.data;
+                   //alert(str[i]);
+                   　　}
+              var x = Number(str[1])
+              var y = Number(str[0])
+             // alert(x);
+             // alert(y);
+              AddPin(x,y);
+           　　}
+   　　}
+}
+ 
+ </script>
+ <label>查询目标</label>
+	<select name="Lclass" onChange="getPoi('L',this.value)">
+		<option value="">请选择</option>
+		<option value="汽车服务">汽车服务</option>
+		<option value="汽车销售">汽车销售</option>
+		<option value="汽车维修">汽车维修</option>
+		<option value="摩托车服务">摩托车服务</option>
+		<option value="餐饮服务">餐饮服务</option>
+		<option value="购物服务">购物服务</option>
+		<option value="生活服务">生活服务</option>
+		<option value="体育休闲服务">体育休闲服务</option>
+		<option value="医疗保健服务">医疗保健服务</option>
+		<option value="住宿服务">住宿服务</option>
+		<option value="风景名胜">风景名胜</option>
+		<option value="商务住宅">商务住宅</option>
+		<option value="政府机构及社会团体">政府机构及社会团体</option>
+		<option value="科教文化服务">科教文化服务</option>
+		<option value="交通设施服务">交通设施服务</option>
+		<option value="金融保险服务">金融保险服务</option>
+		<option value="公司企业">公司企业</option>
+		<option value="道路附属设施">道路附属设施</option>
+		<option value="地名地址信息">地名地址信息</option>
+		<option value="公共设施">公共设施</option>
+	</select>
+	<select id="Mclass" onChange="getPoi('M',this.value)">
+		<option value="">请选择</option>
+	</select>
+
+	<select id="Sclass" onChange="getPoi('S',this.value)">
+		<option value="">请选择</option>
+	</select>
+<br/>
+<label>查询种类</label>
+<select id="method">
+	<option value="NNQ">查最近</option>
+	<option value="SRQ">查周边</option>
+</select>
+<br/>
+<label>范围查询参数</label>
+<input type="text" id="dis" />
+<br/>
+<button onclick="doQuery()">查询</button>
+ 
    </body>
 </html>
 

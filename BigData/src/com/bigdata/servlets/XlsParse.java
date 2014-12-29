@@ -12,41 +12,6 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 public class XlsParse {
 
-	class Type{
-		private String type;
-		private String name;
-		Type(String t,String name){
-			this.type = t;
-			this.name = name;
-		}
-		public void setType(String t){
-			type = t;
-		}
-		public String getType(){
-			return type;
-		}
-		public void setName(String n){
-			name = n;
-		}
-		public String getName(){
-			return name;
-		}
-	}
-	/*
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		String file = "POIYP.xls";
-		XlsParse parser = new XlsParse();
-		String[][] resPoi = null;
-		try {
-			resPoi = parser.readXls(file);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		parser.printRes(resPoi);
-	}
-	*/
 	String[][] readXls(String fileName) throws IOException{
 		InputStream is = new FileInputStream( fileName);  
 		String[][] poiRes = new String[667][6];
