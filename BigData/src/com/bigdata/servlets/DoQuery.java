@@ -109,7 +109,7 @@ public class DoQuery extends HttpServlet {
 		}
 		
 		//System.out.println("poi:" + POI1 + POI2 + POI3);
-		if (action.equals("NNQ")) {
+		if (!action.equals("xxx")) {
 			// get useful data
 			System.out.println("poi:" + POI1 + POI2 + POI3);
 			if (!POI3.equals("")) {
@@ -137,19 +137,26 @@ public class DoQuery extends HttpServlet {
 				}
 			}
 			System.out.println("getData");
+			/*
 			for (Data d : useful) {
 				System.out.println("================");
 				d.printData();
 				System.out.println("================");
 			}
+			*/
 			// buildTree
 			SimpleKdTree kdTree = new SimpleKdTree();
 			KdNode root = new KdNode();
 			root = kdTree.buildTree(useful);
-			KdNode nearest = new KdNode();
-			nearest = kdTree.NNQ(root, 121, 31);
-			sb.append("<locate>" + nearest.data.x + "</locate>");
-			sb.append("<locate>" + nearest.data.y + "</locate>");
+			if (action.equals("NNQ")){
+				KdNode nearest = new KdNode();
+				nearest = kdTree.NNQ(root, 121, 31);
+				sb.append("<locate>" + nearest.data.x + "</locate>");
+				sb.append("<locate>" + nearest.data.y + "</locate>");
+			}else if(action.equals("SRQ")){
+				//TODO
+				System.out.println("Not implemented!");
+			}
 			
 		}
 
