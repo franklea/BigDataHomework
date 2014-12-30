@@ -26,7 +26,7 @@ public class Test {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		parser.printRes(resPoi);
+		//parser.printRes(resPoi);
 		
 		//poi data stored in list res;
 		ArrayList<Data> dataList = new ArrayList<Data>();
@@ -45,6 +45,18 @@ public class Test {
 //		KdNode nearest = new KdNode();
 //		nearest = kdTree.NNQ(root, 2, 4.5);
 //		nearest.data.printData();
+
+// test SRQ
+		/*
+		System.out.println("do SRQ");
+		ArrayList<KdNode> res = new ArrayList<KdNode>();
+		res = kdTree.SRQ(root,121.429,31.031,1000);
+		for (KdNode d : res){
+			d.data.printData();
+			double dis = kdTree.getDistance(d.data.x, d.data.y, 121.429, 31.031);
+			System.out.println("dis: "+dis);
+		}
+		*/
 		
 	}
 }

@@ -195,15 +195,57 @@ public class SimpleKdTree {
 	/*
 	 * Special Range Query
 	 */
-	
+	double EARTH_RADIUS = 6378137;
+
+	private double rad(double d) {
+		return d * Math.PI / 180.0;
+	}
+
+	public double getDistance(double lng1, double lat1, double lng2, double lat2) {
+		//to meters
+		double radLat1 = rad(lat1);
+		double radLat2 = rad(lat2);
+		double a = radLat1 - radLat2;
+		double b = rad(lng1) - rad(lng2);
+		double s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2)
+				+ Math.cos(radLat1) * Math.cos(radLat2)
+				* Math.pow(Math.sin(b / 2), 2)));
+		s = s * EARTH_RADIUS;
+		s = Math.round(s * 10000) / 10000;
+		return s;
+	}
+
 	public ArrayList<KdNode> SRQ(KdNode root, double x, double y ,double range) {
 		ArrayList<KdNode> res = new ArrayList<KdNode>();
-		Rectangle targetRec = new Rectangle(x-range,y-range,x+range,y+range);
-		if (root.left == null && root.right == null){
-			
-		}
 		
+		Stack<KdNode> node = new Stack<KdNode>();
+		node.push(root);
+		
+		while(node.size() != 0){
+			KdNode tmpNode = node.pop();
+			double dis = getDistance(tmpNode.data.x,tmpNode.data.y,x,y);
+			System.out.println("dis: "+dis);
+			if (dis <= range){
+				res.add(tmpNode);
+			}
+			
+			if (tmpNode.left != null){
+				node.push(tmpNode.left);
+			}
+			if (tmpNode.right != null){
+				node.push(tmpNode.right);
+			}
+		}
 		return res;
+	}
+	
+	Stack<KdNode> node = new Stack<KdNode>();
+	public void getNode(KdNode root){
+		if (root != null){
+			node.push(root);
+			getNode(root.left);
+			getNode(root.right);
+		}
 	}
 	
 	

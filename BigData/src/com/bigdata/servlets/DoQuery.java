@@ -38,6 +38,7 @@ public class DoQuery extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		System.out.println("in do get");
 		if (poiParsed == 0) {
 			String poi = "F:\\git\\BigData\\data.txt";
 			Data data = new Data();
@@ -137,25 +138,53 @@ public class DoQuery extends HttpServlet {
 				}
 			}
 			System.out.println("getData");
-			/*
+			
 			for (Data d : useful) {
 				System.out.println("================");
 				d.printData();
 				System.out.println("================");
 			}
-			*/
+			
+			if (useful.isEmpty()){
+				sb.append("<name>нч╫А╧Ш</name>");
+				sb.append("</wclass>");
+				System.out.println(sb);
+				response.setContentType("text/xml;charset=utf-8");
+				// response. setCharacterEncoding("GB2312");
+				// response.setHeader("Content-Type", "text/html;charset=UTF-8");
+				PrintWriter out = response.getWriter();
+				out.write(sb.toString());
+				out.flush();
+				out.close();
+			}
 			// buildTree
 			SimpleKdTree kdTree = new SimpleKdTree();
 			KdNode root = new KdNode();
 			root = kdTree.buildTree(useful);
 			if (action.equals("NNQ")){
+				System.out.println("do NNQ");
 				KdNode nearest = new KdNode();
-				nearest = kdTree.NNQ(root, 121, 31);
+				nearest = kdTree.NNQ(root, 121.429, 31.031);
 				sb.append("<locate>" + nearest.data.x + "</locate>");
 				sb.append("<locate>" + nearest.data.y + "</locate>");
+				sb.append("<name>" + nearest.data.name + "</name>");
 			}else if(action.equals("SRQ")){
 				//TODO
-				System.out.println("Not implemented!");
+				System.out.println("do SRQ");
+				
+				System.out.println("do SRQ");
+				ArrayList<KdNode> res = new ArrayList<KdNode>();
+				double range = Double.parseDouble(parm);
+				System.out.println("range:"+range);
+				res = kdTree.SRQ(root,121.429,31.031,range);
+				for (KdNode d : res){
+					d.data.printData();
+					sb.append("<locate>" + d.data.x + "</locate>");
+					sb.append("<locate>" + d.data.y + "</locate>");
+					double dis = kdTree.getDistance(d.data.x, d.data.y, 121.429, 31.031);
+					System.out.println("dis: "+dis);
+				}
+				
 			}
 			
 		}

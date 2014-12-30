@@ -141,17 +141,21 @@
  function getResult(){
    　　if (req.readyState == 4) { 
            　　if (req.status == 200) {
+        	  alert("get result");
                    　　var mClass =req.responseXML.getElementsByTagName("locate");
                    　　var str=new Array();
                    　　for(var i=0;i<mClass.length;i++){
                            　　str[i]=mClass[i].firstChild.data;
-                   //alert(str[i]);
+                   if (i %2 ==1 && i>0){
+                	   AddPin(Number(str[i]),Number(str[i-1]));
+                   }
                    　　}
-              var x = Number(str[1])
-              var y = Number(str[0])
-             // alert(x);
-             // alert(y);
-              AddPin(x,y);
+              var name =req.responseXML.getElementsByTagName("name");
+              var nameStr=new Array();
+	            　　for(var i=0;i<name.length;i++){
+	                    　　nameStr[i]=name[i].firstChild.data;
+	            	alert("查询结果 ：" + nameStr[i]);
+	            　　}
            　　}
    　　}
 }
@@ -195,7 +199,7 @@
 	<option value="SRQ">查周边</option>
 </select>
 <br/>
-<label>范围查询参数</label>
+<label>范围查询参数(Km)</label>
 <input type="text" id="dis" />
 <br/>
 <button onclick="doQuery()">查询</button>
